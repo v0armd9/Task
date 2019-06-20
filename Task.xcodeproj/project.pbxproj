@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C49F8B922BB16B10087168D /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C49F8B822BB16B10087168D /* ButtonTableViewCell.swift */; };
 		2CC6DA4C22BAC5360094D704 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6DA4B22BAC5360094D704 /* AppDelegate.swift */; };
 		2CC6DA5122BAC5360094D704 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CC6DA4F22BAC5360094D704 /* Main.storyboard */; };
 		2CC6DA5422BAC5360094D704 /* Task.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6DA5222BAC5360094D704 /* Task.xcdatamodeld */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C49F8B822BB16B10087168D /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
 		2CC6DA4822BAC5360094D704 /* Task.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Task.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CC6DA4B22BAC5360094D704 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CC6DA5022BAC5360094D704 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -47,6 +49,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C49F8B722BB15E60087168D /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				2C49F8B822BB16B10087168D /* ButtonTableViewCell.swift */,
+			);
+			path = "Custom Views";
+			sourceTree = "<group>";
+		};
 		2CC6DA3F22BAC5360094D704 = {
 			isa = PBXGroup;
 			children = (
@@ -66,6 +76,7 @@
 		2CC6DA4A22BAC5360094D704 /* Task */ = {
 			isa = PBXGroup;
 			children = (
+				2C49F8B722BB15E60087168D /* Custom Views */,
 				2CC6DA6522BAD4810094D704 /* Views */,
 				2CC6DA6222BAD45C0094D704 /* Controllers */,
 				2CC6DA6122BAD4530094D704 /* Models */,
@@ -201,6 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C49F8B922BB16B10087168D /* ButtonTableViewCell.swift in Sources */,
 				2CC6DA6F22BAD9A10094D704 /* TaskController.swift in Sources */,
 				2CC6DA6B22BAD7A40094D704 /* CoreDataStack.swift in Sources */,
 				2CC6DA6722BAD72B0094D704 /* TaskListTableViewController.swift in Sources */,

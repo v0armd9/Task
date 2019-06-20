@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TaskListTableViewController: UITableViewController {
+class TaskListTableViewController: UITableViewController, ButtonTableViewCellDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +27,10 @@ class TaskListTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? ButtonTableViewCell else {return UITableViewCell()}
         let task = TaskController.sharedInstance.tasks[indexPath.row]
-        cell.textLabel?.text = task.name
+        cell.update(withTask: task)
+        cell.delegate = self
         
         // Configure the cell...
         
@@ -43,6 +44,13 @@ class TaskListTableViewController: UITableViewController {
             TaskController.sharedInstance.remove(task: task)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
+    }
+    
+    func ButtonCellButtonTapped(_ sender: ButtonTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: sender) else {return}
+        let task = TaskController.sharedInstance.tasks[indexPath.row]
+        TaskController.sharedInstance.toggleIsCompleteFor(task: task)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
     // MARK: - Navigation

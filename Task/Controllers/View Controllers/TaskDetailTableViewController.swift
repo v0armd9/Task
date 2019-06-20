@@ -9,7 +9,7 @@
 import UIKit
 
 class TaskDetailTableViewController: UITableViewController {
-
+    
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var dueDateTextField: UITextField!
     @IBOutlet weak var notesTextView: UITextView!
@@ -18,19 +18,24 @@ class TaskDetailTableViewController: UITableViewController {
     var taskLandingPad: Task?
     var dueDateValue: Date?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
         dueDateTextField.inputView = dueDatePicker
     }
-
+    
     @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
         if let task = taskLandingPad {
+            let due = taskLandingPad?.due
             guard let name = nameTextField.text else {return}
-            TaskController.sharedInstance.update(task: task, name: name, notes: notesTextView?.text, due: dueDateValue)
+            TaskController.sharedInstance.update(task: task, name: name, notes: notesTextView?.text, due: due)
         } else {
-            guard let name = nameTextField.text else {return}
-            TaskController.sharedInstance.add(taskWithName: name, notes: notesTextView.text, due: dueDateValue)
+            let due = dueDatePicker.date
+            guard let name = nameTextField.text,
+            let notes = notesTextView.text
+            else {return}
+            TaskController.sharedInstance.add(taskWithName: name, notes: notes, due: due)
         }
         navigationController?.popViewController(animated: true)
     }
@@ -50,11 +55,13 @@ class TaskDetailTableViewController: UITableViewController {
     }
     
     func updateViews() {
-        guard let due = taskLandingPad?.due else {return}
-        if isViewLoaded {
-            nameTextField.text = taskLandingPad?.name
-            notesTextView.text = taskLandingPad?.notes
-            dueDateTextField.text = due.stringValue()
-        }
+        guard let task = taskLandingPad,
+            let due = taskLandingPad?.due,
+            isViewLoaded
+            else {return}
+        nameTextField.text = task.name
+        notesTextView.text = task.notes
+        dueDateTextField.text = due.stringValue()
     }
 }
+

@@ -25,26 +25,29 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="46.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="k1n-4l-lfx">
+                                        <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="k1n-4l-lfx">
                                             <rect key="frame" x="2" y="4" width="410" height="38.5"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OOG-aq-iCp">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OOG-aq-iCp">
                                                     <rect key="frame" x="0.0" y="0.0" width="369.5" height="38.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="30"/>
                                                     <color key="textColor" red="0.65254681339999998" green="0.54736266420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZ1-qS-2hw">
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZ1-qS-2hw">
                                                     <rect key="frame" x="371.5" y="0.0" width="38.5" height="38.5"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" secondItem="sZ1-qS-2hw" secondAttribute="height" multiplier="1:1" id="vKc-rj-b3D"/>
+                                                        <constraint firstAttribute="width" secondItem="sZ1-qS-2hw" secondAttribute="height" multiplier="1:1" id="xM7-as-KQE"/>
                                                     </constraints>
-                                                    <state key="normal" image="incomplete"/>
+                                                    <inset key="imageEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
                                                     <connections>
                                                         <action selector="buttonTapped:" destination="Nww-IG-8KT" eventType="touchUpInside" id="VsX-4X-Lnm"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="OOG-aq-iCp" firstAttribute="centerY" secondItem="k1n-4l-lfx" secondAttribute="centerY" id="pms-qV-9Dm"/>
+                                            </constraints>
                                         </stackView>
                                     </subviews>
                                     <constraints>
@@ -57,7 +60,6 @@
                                 <connections>
                                     <outlet property="completeButton" destination="sZ1-qS-2hw" id="B6l-mx-5Pw"/>
                                     <outlet property="primaryLabel" destination="OOG-aq-iCp" id="B5U-db-eM3"/>
-                                    <outlet property="taskNameLabel" destination="OOG-aq-iCp" id="mm3-eD-RZl"/>
                                     <segue destination="AaJ-sl-UPJ" kind="show" identifier="toTaskDetail" id="pKb-RG-t8g"/>
                                 </connections>
                             </tableViewCell>
@@ -233,9 +235,6 @@
             <point key="canvasLocation" x="-86.956521739130437" y="75"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="incomplete" width="512" height="512"/>
-    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="pKb-RG-t8g"/>
     </inferredMetricsTieBreakers>

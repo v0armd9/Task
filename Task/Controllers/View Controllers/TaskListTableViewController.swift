@@ -29,11 +29,8 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? ButtonTableViewCell else {return UITableViewCell()}
         let task = TaskController.sharedInstance.tasks[indexPath.row]
-        cell.update(withTask: task)
         cell.delegate = self
-        
-        // Configure the cell...
-        
+        cell.update(withTask: task)
         return cell
     }
     

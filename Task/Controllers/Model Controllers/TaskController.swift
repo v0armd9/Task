@@ -13,25 +13,27 @@ class TaskController {
     
     static let sharedInstance = TaskController()
     
-    var tasks: [Task] = []
-//        let request: NSFetchRequest<Task> = Task.fetchRequest()
-//        do {
-//            let taskData = (try CoreDataStack.context.fetch(request))
-//            return taskData
-//        } catch {
-//            print(error)
-//        }
-//        return []
-//    }
+    let fetchedResultsController: NSFetchedResultsController<Task>
+    
     init() {
-        tasks = fetchTasks()
+        let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "isComplete", ascending: false), NSSortDescriptor(key: "due", ascending: false)]
+        
+        let resultsController: NSFetchedResultsController<Task> = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.context, sectionNameKeyPath: "isComplete", cacheName: nil)
+        
+        fetchedResultsController = resultsController
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("Error fetching data: \(error.localizedDescription)")
+        }
     }
     
     func add(taskWithName name: String, notes: String, due: Date?) {
         guard let due = due else {return}
         Task(name: name, notes: notes, due: due)
         saveToPersistentStore()
-        tasks = fetchTasks()
     }
     
     func update(task: Task, name: String, notes: String?, due: Date?) {
@@ -39,13 +41,11 @@ class TaskController {
         task.notes = notes
         task.due = due
         saveToPersistentStore()
-        tasks = fetchTasks()
     }
     
     func remove(task: Task) {
         task.managedObjectContext?.delete(task)
         saveToPersistentStore()
-        tasks = fetchTasks()
     }
     
     func toggleIsCompleteFor(task: Task) {
@@ -61,10 +61,5 @@ class TaskController {
         } catch {
             print("Error saving to persistence: \(error.localizedDescription)")
         }
-    }
-    
-    private func fetchTasks() -> [Task] {
-        let request: NSFetchRequest<Task> = Task.fetchRequest()
-        return (try? CoreDataStack.context.fetch(request)) ?? []
     }
 }

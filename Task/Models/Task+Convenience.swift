@@ -17,5 +17,6 @@ extension Task {
         self.name = name
         self.notes = notes
         self.due = due
+        
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TaskListTableViewController: UITableViewController, ButtonTableViewCellDelegate {
     
@@ -16,9 +17,14 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
         TaskController.sharedInstance.toggleIsCompleteFor(task: task)
     }
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        TaskController.sharedInstance.fetchedResultsController.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
 
     // MARK: - Table view data source
@@ -38,7 +44,7 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? ButtonTableViewCell,
-            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.row] else {return UITableViewCell()}
+            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.section + indexPath.row] else {return UITableViewCell()}
         cell.update(withTask: task)
         cell.delegate = self
         
@@ -51,7 +57,7 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if TaskController.sharedInstance.fetchedResultsController.sections?[section].name == "0" {
-            return "Incompleted"
+            return "Incomplete"
         } else {
             return "Completed"
         }
@@ -61,7 +67,7 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            guard let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.row] else {return}
+            guard let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.section + indexPath.row] else {return}
             TaskController.sharedInstance.remove(task: task)
         }
     }
@@ -74,8 +80,57 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
             guard let indexPath = tableView.indexPathForSelectedRow,
                 let destinationVC = segue.destination as? TaskDetailTableViewController
             else {return}
-            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.row]
+            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.section + indexPath.row]
             destinationVC.taskLandingPad = task
         }
     }
+}
+
+extension TaskListTableViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+
+        switch(type) {
+        case NSFetchedResultsChangeType.insert:
+            self.tableView?.insertSections(NSIndexSet.init(index: sectionIndex) as IndexSet, with: .fade)
+        case NSFetchedResultsChangeType.delete:
+            self.tableView?.deleteSections(NSIndexSet.init(index: sectionIndex) as IndexSet, with: .fade)
+        default:
+            return
+            
+        }
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        switch type {
+            
+        case .delete:
+            guard let indexPath = indexPath else {return}
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+        case .insert:
+            guard let newIndexPath = newIndexPath else {return}
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+            
+        case .move:
+            guard let oldIndexPath = indexPath, let newIndexPath = newIndexPath else {return}
+            tableView.moveRow(at: oldIndexPath, to: newIndexPath)
+            
+        case .update:
+            guard let indexPath = indexPath else {return}
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError()
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+    
 }

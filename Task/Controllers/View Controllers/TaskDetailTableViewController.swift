@@ -18,7 +18,6 @@ class TaskDetailTableViewController: UITableViewController {
     var taskLandingPad: Task?
     var dueDateValue: Date?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
@@ -64,4 +63,3 @@ class TaskDetailTableViewController: UITableViewController {
         dueDateTextField.text = due.stringValue()
     }
 }
-

@@ -15,6 +15,7 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
         guard let indexPath = tableView.indexPath(for: sender) else {return}
         let task = TaskController.sharedInstance.fetchedResultsController.object(at: indexPath)
         TaskController.sharedInstance.toggleIsCompleteFor(task: task)
+        sender.update(withTask: task)
     }
     
     override func viewDidLoad() {
@@ -28,13 +29,10 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
     }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
             return TaskController.sharedInstance.fetchedResultsController.sections?.count ?? 1
         }
     
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = TaskController.sharedInstance.fetchedResultsController.sections else {
             fatalError("No sections in fetchedResultsController")
@@ -43,14 +41,11 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? ButtonTableViewCell,
-            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.section + indexPath.row] else {return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? ButtonTableViewCell else {return UITableViewCell()}
+
+            let task = TaskController.sharedInstance.fetchedResultsController.object(at: indexPath)
         cell.update(withTask: task)
         cell.delegate = self
-        
-        
-        
-        // Configure the cell...
 
         return cell
     }
@@ -63,29 +58,26 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
         }
     }
 
-    
-    // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            guard let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.section + indexPath.row] else {return}
+            guard let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.row] else {return}
             TaskController.sharedInstance.remove(task: task)
         }
     }
 
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toTaskDetail"{
             guard let indexPath = tableView.indexPathForSelectedRow,
                 let destinationVC = segue.destination as? TaskDetailTableViewController
             else {return}
-            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.section + indexPath.row]
+            let task = TaskController.sharedInstance.fetchedResultsController.fetchedObjects?[indexPath.row]
             destinationVC.taskLandingPad = task
         }
     }
 }
 
+// MARK: NSFetchedResultsControllerDelegate
 extension TaskListTableViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
@@ -94,13 +86,12 @@ extension TaskListTableViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 
         switch(type) {
-        case NSFetchedResultsChangeType.insert:
+        case .insert:
             self.tableView?.insertSections(NSIndexSet.init(index: sectionIndex) as IndexSet, with: .fade)
-        case NSFetchedResultsChangeType.delete:
-            self.tableView?.deleteSections(NSIndexSet.init(index: sectionIndex) as IndexSet, with: .fade)
+        case .delete:
+            tableView?.deleteSections(NSIndexSet.init(index: sectionIndex) as IndexSet, with: .fade)
         default:
             return
-            
         }
     }
 
@@ -131,6 +122,4 @@ extension TaskListTableViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
     }
-    
-    
 }

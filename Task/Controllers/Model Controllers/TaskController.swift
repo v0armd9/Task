@@ -53,7 +53,6 @@ class TaskController {
         saveToPersistentStore()
     }
     
-    
     func saveToPersistentStore() {
         let moc = CoreDataStack.context
         do {
